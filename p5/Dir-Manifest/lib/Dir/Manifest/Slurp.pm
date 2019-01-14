@@ -6,7 +6,7 @@ use warnings;
 use Socket qw(:crlf);
 
 use parent qw(Exporter);
-our %EXPORT_TAGS = ( 'all' => [qw( as_lf )] );
+our %EXPORT_TAGS = ( 'all' => [qw( as_lf slurp )] );
 our @EXPORT_OK   = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT      = qw();
 
@@ -15,6 +15,21 @@ sub as_lf
     my ($s) = @_;
     $s =~ s#$CRLF#$LF#g;
     return $s;
+}
+
+sub slurp
+{
+    my ( $fh, $opts ) = @_;
+
+    if ( $opts->{raw} )
+    {
+        return $fh->slurp_raw;
+    }
+    else
+    {
+        my $ret = $fh->slurp_utf8;
+        return $opts->{lf} ? as_lf($ret) : $ret;
+    }
 }
 
 1;
@@ -31,5 +46,9 @@ Dir::Manifest::Slurp - utility functions for slurping .
 
 Returns the string with all CRLF newlines converted to LF. See
 L<https://en.wikipedia.org/wiki/Newline> .
+
+=head2 my $contents = slurp(path("foo.txt"), { lf => 1, })
+=head2 my $contents = slurp(path("foo.txt"), { raw => 1, })
+=head2 my $contents = slurp(path("foo.txt"), { }) # urf-8
 
 =cut
