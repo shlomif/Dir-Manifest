@@ -51,6 +51,17 @@ sub get_keys
     return [ sort { $a cmp $b } keys %{ $self->_keys } ];
 }
 
+sub get_obj
+{
+    my ( $self, $key ) = @_;
+
+    if ( not exists $self->_keys->{$key} )
+    {
+        die "No such key \"$key\"! Perhaps add it to the manifest.";
+    }
+    return;
+}
+
 1;
 
 =head1 NAME
@@ -80,5 +91,10 @@ The path to the directory containing the texts and blobs as files.
 =head2 $self->get_keys()
 
 Returns a sorted array reference containing the available keys as strings.
+
+=head2 $self->get_obj($key)
+
+Returns the L<Dir::Manifest::Key> object associated with the string $key.
+Throws an error if $key was not given in the manifest.
 
 =cut
