@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 7;
 use Dir::Manifest ();
 
 use Socket qw(:crlf);
@@ -102,4 +102,23 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
 
     # TEST
     is_deeply( \@keys, [qw/one three two/], "get_keys worked.", );
+
+    $fh->spew_utf8("one\ntwo\nthree\n");
+    $d->child("one")->spew_utf8("sample text");
+    $obj = Dir::Manifest->new(
+        {
+            manifest_fn => "$fh",
+            dir         => "$d",
+        }
+    );
+
+    @keys = @{ $obj->get_keys };
+
+    $key = $obj->get_obj("one");
+
+    # TEST
+    is_deeply( $key->fh->slurp_utf8, "sample text", "slurp worked.", );
+
+    # TEST
+    is_deeply( $obj->text( "one", {} ), "sample text", "->text worked.", );
 }

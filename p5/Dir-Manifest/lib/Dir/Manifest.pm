@@ -6,6 +6,8 @@ use warnings;
 use 5.014;
 
 use Path::Tiny qw/ path tempdir tempfile cwd /;
+use Dir::Manifest::Key   ();
+use Dir::Manifest::Slurp ();
 
 use Moo;
 
@@ -44,6 +46,15 @@ has '_keys' => (
     }
 );
 
+has '_dh' => (
+    is      => 'ro',
+    lazy    => 1,
+    default => sub {
+        my $self = shift;
+        return path( $self->dir );
+    },
+);
+
 sub get_keys
 {
     my ($self) = @_;
@@ -59,7 +70,15 @@ sub get_obj
     {
         die "No such key \"$key\"! Perhaps add it to the manifest.";
     }
-    return;
+    return Dir::Manifest::Key->new(
+        { key => $key, fh => $self->_dh->child($key) } );
+}
+
+sub text
+{
+    my ( $self, $key, $opts ) = @_;
+
+    return Dir::Manifest::Slurp::slurp( $self->get_obj($key)->fh, $opts );
 }
 
 1;
@@ -96,5 +115,9 @@ Returns a sorted array reference containing the available keys as strings.
 
 Returns the L<Dir::Manifest::Key> object associated with the string $key.
 Throws an error if $key was not given in the manifest.
+
+=head2 my $contents = $self->text("$key", {%OPTS})
+
+Slurps the key using L<Dir::Manifest::Slurp>
 
 =cut
