@@ -13,6 +13,7 @@ has 'manifest_fn' => ( is => 'ro', required => 1 );
 has 'dir'         => ( is => 'ro', required => 1 );
 
 my $ALLOWED = qr/[a-zA-Z0-9_\-\.=]/;
+my $ALPHAN  = qr/[a-zA-Z0-9_]/;
 has '_keys' => (
     is      => 'ro',
     lazy    => 1,
@@ -28,6 +29,10 @@ has '_keys' => (
             {
                 die
 "Invalid characters in key \"$l\"! We only allow A-Z, a-z, 0-9, _, dashes and equal signs.";
+            }
+            if ( $l !~ /\A$ALPHAN/ )
+            {
+                die qq#Key does not start with an alphanumeric - "$l"!#;
             }
             $ret->{$l} = 1;
         }
