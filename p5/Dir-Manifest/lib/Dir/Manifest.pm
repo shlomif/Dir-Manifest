@@ -34,6 +34,10 @@ has '_keys' => (
             {
                 die qq#Key does not start with an alphanumeric - "$l"!#;
             }
+            if ( $l !~ /$ALPHAN\z/ )
+            {
+                die qq#Key does not end with an alphanumeric - "$l"!#;
+            }
             $ret->{$l} = 1;
         }
         return $ret;
