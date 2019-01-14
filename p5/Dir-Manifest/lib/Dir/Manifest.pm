@@ -120,4 +120,22 @@ Throws an error if $key was not given in the manifest.
 
 Slurps the key using L<Dir::Manifest::Slurp>
 
+=head1 DEDICATION
+
+This code is dedicated to the memory of L<Jonathan Scott Duff,https://metacpan.org/author/DUFF>
+a.k.a PerlJam and perlpilot who passed away some days before the first release of
+this code. For more about him, see:
+
+=over 4
+
+=item * L<https://p6weekly.wordpress.com/2018/12/30/2018-53-goodbye-perljam/>
+
+=item * L<https://www.facebook.com/groups/perl6/permalink/2253332891599724/>
+
+=item * L<https://www.mail-archive.com/perl6-users@perl.org/msg06390.html>
+
+=item * L<https://www.shlomifish.org/humour/fortunes/sharp-perl.html>
+
+=back
+
 =cut
