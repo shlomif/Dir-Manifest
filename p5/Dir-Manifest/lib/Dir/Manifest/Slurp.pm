@@ -47,8 +47,9 @@ Dir::Manifest::Slurp - utility functions for slurping .
 Returns the string with all CRLF newlines converted to LF. See
 L<https://en.wikipedia.org/wiki/Newline> .
 
-=head2 my $contents = slurp(path("foo.txt"), { lf => 1, })
+=head2 my $contents = slurp(path("foo.txt"), { lf => 1, }) # utf-8 after using as_lf
 =head2 my $contents = slurp(path("foo.txt"), { raw => 1, })
-=head2 my $contents = slurp(path("foo.txt"), { }) # urf-8
+=head2 my $contents = slurp(path("foo.txt"), { }) # utf-8
 
+Accepts a L<Path::Tiny> object and an options hash reference.
 =cut
