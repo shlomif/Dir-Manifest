@@ -81,6 +81,15 @@ sub text
     return Dir::Manifest::Slurp::slurp( $self->get_obj($key)->fh, $opts );
 }
 
+sub texts_dictionary
+{
+    my ( $self, $args ) = @_;
+
+    my $opts = $args->{slurp_opts};
+
+    return +{ map { $_ => $self->text( $_, $opts ) } @{ $self->get_keys } };
+}
+
 1;
 
 =head1 NAME
@@ -119,6 +128,11 @@ Throws an error if $key was not given in the manifest.
 =head2 my $contents = $self->text("$key", {%OPTS})
 
 Slurps the key using L<Dir::Manifest::Slurp>
+
+=head2 my $hash_ref = $obj->texts_dictionary( {slurp_opts => {},} );
+
+Returns a hash reference (a dictionary) containing all keys and their slurped contents
+as values. C<'slurp_opts'> is passed to text().
 
 =head1 DEDICATION
 
