@@ -138,4 +138,9 @@ this code. For more about him, see:
 
 =back
 
+=head1 MEDIA RECOMMENDATION
+
+L<kristian vuljar,https://www.jamendo.com/artist/441226/kristian-vuljar> used to
+have a jamendo track called "Keys" based on L<Shine 4U,https://www.youtube.com/watch?v=B8ehY5tutHs> by Carmen and Camille. You can find it at L<http://www.shlomifish.org/Files/files/dirs/kristian-vuljar--keys/> .
+
 =cut
