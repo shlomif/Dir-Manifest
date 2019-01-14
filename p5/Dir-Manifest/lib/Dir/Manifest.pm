@@ -3,7 +3,7 @@ package Dir::Manifest;
 use strict;
 use warnings;
 
-use 5.016;
+use 5.014;
 
 use Path::Tiny qw/ path tempdir tempfile cwd /;
 
