@@ -96,6 +96,23 @@ sub texts_dictionary
 
 Dir::Manifest - treat a directory and a manifest file as a hash/dictionary of keys to texts or blobs
 
+
+=head1 SYNOPSIS
+
+    my $obj = Dir::Manifest->new(
+        {
+            manifest_fn => "./t/data/texts/list.txt",
+            dir         => "./t/data/texts/texts",
+        }
+    );
+
+    # TEST
+    is (
+        scalar(`my-process ...`),
+        $obj->text("my-process-output1", {lf => 1,}),
+        "Good output of my-process.",
+    );
+
 =head1 DESCRIPTION
 
 Here is the primary use case: you have several long texts (and/or binary blobs) that you
