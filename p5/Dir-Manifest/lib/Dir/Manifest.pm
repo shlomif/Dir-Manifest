@@ -5,7 +5,7 @@ use warnings;
 
 use 5.014;
 
-use Path::Tiny qw/ path tempdir tempfile cwd /;
+use Path::Tiny qw/ path /;
 use Dir::Manifest::Key   ();
 use Dir::Manifest::Slurp ();
 
