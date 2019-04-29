@@ -153,7 +153,7 @@ as values. C<'slurp_opts'> is passed to text().
 
 =head1 DEDICATION
 
-This code is dedicated to the memory of L<Jonathan Scott Duff,https://metacpan.org/author/DUFF>
+This code is dedicated to the memory of L<Jonathan Scott Duff|https://metacpan.org/author/DUFF>
 a.k.a PerlJam and perlpilot who passed away some days before the first release of
 this code. For more about him, see:
 
@@ -171,7 +171,7 @@ this code. For more about him, see:
 
 =head1 MEDIA RECOMMENDATION
 
-L<kristian vuljar,https://www.jamendo.com/artist/441226/kristian-vuljar> used to
-have a jamendo track called "Keys" based on L<Shine 4U,https://www.youtube.com/watch?v=B8ehY5tutHs> by Carmen and Camille. You can find it at L<http://www.shlomifish.org/Files/files/dirs/kristian-vuljar--keys/> .
+L<kristian vuljar|https://www.jamendo.com/artist/441226/kristian-vuljar> used to
+have a jamendo track called "Keys" based on L<Shine 4U|https://www.youtube.com/watch?v=B8ehY5tutHs> by Carmen and Camille. You can find it at L<http://www.shlomifish.org/Files/files/dirs/kristian-vuljar--keys/> .
 
 =cut
