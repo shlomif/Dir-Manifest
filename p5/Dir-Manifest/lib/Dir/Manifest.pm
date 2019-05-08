@@ -96,7 +96,6 @@ sub texts_dictionary
 
 Dir::Manifest - treat a directory and a manifest file as a hash/dictionary of keys to texts or blobs
 
-
 =head1 SYNOPSIS
 
     my $obj = Dir::Manifest->new(
