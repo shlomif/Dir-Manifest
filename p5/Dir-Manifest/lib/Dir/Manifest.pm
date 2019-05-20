@@ -98,6 +98,8 @@ Dir::Manifest - treat a directory and a manifest file as a hash/dictionary of ke
 
 =head1 SYNOPSIS
 
+    use Dir::Manifest ();
+
     my $obj = Dir::Manifest->new(
         {
             manifest_fn => "./t/data/texts/list.txt",
