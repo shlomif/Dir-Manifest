@@ -106,6 +106,15 @@ sub texts_dictionary
     return +{ map { $_ => $self->text( $_, $opts ) } @{ $self->get_keys } };
 }
 
+sub _update_disk_manifest
+{
+    my $self = shift;
+
+    path( $self->manifest_fn )->spew_raw( map { "$_\n" } @{ $self->get_keys } );
+
+    return;
+}
+
 sub add_key
 {
     my ( $self, $args ) = @_;
@@ -122,7 +131,7 @@ sub add_key
 
     $self->_keys->{$key} = 1;
 
-    path( $self->manifest_fn )->spew_raw( map { "$_\n" } @{ $self->get_keys } );
+    $self->_update_disk_manifest;
     $self->fh($key)->spew_utf8($utf8_val);
 
     return;
@@ -141,8 +150,7 @@ sub remove_key
 
     $self->fh($key)->remove;
     delete $self->_keys->{$key};
-
-    path( $self->manifest_fn )->spew_raw( map { "$_\n" } @{ $self->get_keys } );
+    $self->_update_disk_manifest;
 
     return;
 }
