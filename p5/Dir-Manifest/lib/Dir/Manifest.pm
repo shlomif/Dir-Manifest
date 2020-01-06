@@ -188,6 +188,13 @@ Dir::Manifest - treat a directory and a manifest file as a hash/dictionary of ke
         }
     );
 
+    # Or alternatively:
+    my $obj = Dir::Manifest->dwim_new(
+        {
+            base => "./t/data/texts",
+        }
+    );
+
     # TEST
     is (
         scalar(`my-process ...`),
@@ -206,6 +213,10 @@ C<<< my $text = $dir->text("deal24solution.txt", {lf => 1}) >>>. And hopefully i
 be done securely and reliably.
 
 =head1 METHODS
+
+=head2 my $obj = Dir::Manifest->new({manifest_fn => "/path/to/base-dir/list.txr", dir => "/path/to/base-dir/texts",});
+
+Constructs a new Dir::Manifest object from separate manifest_fn and a directory holding the texts.
 
 =head2 my $obj = Dir::Manifest->dwim_new({base => "/path/to/base-dir"});
 
