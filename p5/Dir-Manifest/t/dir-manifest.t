@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 9;
+use Test::More tests => 10;
 use Dir::Manifest ();
 
 use Socket qw(:crlf);
@@ -161,5 +161,12 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
             "key3.md"   => "this is key3"
         },
         "add_key() has added the key - texts_dictionary().",
+    );
+
+    # TEST
+    is_deeply(
+        scalar( $d->child("added_key")->slurp_utf8 ),
+        "added_key value[]",
+        "add_key() has added the key - file system.",
     );
 }
