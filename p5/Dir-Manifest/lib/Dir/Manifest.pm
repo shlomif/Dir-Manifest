@@ -155,6 +155,20 @@ sub remove_key
     return;
 }
 
+sub dwim_new
+{
+    my ( $class, $args ) = @_;
+
+    my $base = path( $args->{base} );
+
+    return $class->new(
+        {
+            manifest_fn => $base->child("list.txt"),
+            dir         => $base->child("texts"),
+        }
+    );
+}
+
 1;
 
 __END__
@@ -192,6 +206,13 @@ C<<< my $text = $dir->text("deal24solution.txt", {lf => 1}) >>>. And hopefully i
 be done securely and reliably.
 
 =head1 METHODS
+
+=head2 my $obj = Dir::Manifest->dwim_new({base => "/path/to/base-dir"});
+
+Constructs a new Dir::Manifest with manifest_fn being C<< $base->child("list.txt") >>
+and dir being C<< $base->child("texts") >>. ("Convention over configuration".)
+
+Added in version 0.6.0.
 
 =head2 $self->manifest_fn()
 

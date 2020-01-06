@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 14;
 use Dir::Manifest ();
 
 use Socket qw(:crlf);
@@ -11,6 +11,14 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
 
 {
     my $dir = tempdir();
+
+    my $dwim_create = sub {
+        return Dir::Manifest->dwim_new(
+            {
+                base => "$dir",
+            }
+        );
+    };
 
     my $fh = $dir->child("list.txt");
     my $d  = $dir->child("texts");
@@ -147,6 +155,17 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
             "key3.md"  => "this is key3"
         },
         "texts_dictionary worked.",
+    );
+
+    # TEST
+    is_deeply(
+        $dwim_create->()->texts_dictionary( { slurp_opts => {}, } ),
+        +{
+            "key1"     => "this is key1",
+            "key2.txt" => "this is key2",
+            "key3.md"  => "this is key3"
+        },
+        "dwim_new() constructor worked.",
     );
 
     $obj->add_key(
