@@ -20,8 +20,17 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
         );
     };
 
-    my $fh = $dir->child("list.txt");
-    my $d  = $dir->child("texts");
+    my $fh         = $dir->child("list.txt");
+    my $d          = $dir->child("texts");
+    my $create_obj = sub {
+        return Dir::Manifest->new(
+            {
+                manifest_fn => "$fh",
+                dir         => "$d",
+            }
+        );
+    };
+
     $d->mkpath;
 
     $fh->spew_utf8("f%%g\n");
@@ -29,13 +38,7 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
     my $obj;
     my @keys;
     eval {
-        $obj = Dir::Manifest->new(
-            {
-                manifest_fn => "$fh",
-                dir         => "$d",
-            }
-        );
-
+        $obj  = $create_obj->();
         @keys = @{ $obj->get_keys };
     };
 
@@ -48,13 +51,7 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
     $fh->spew_utf8(".hidden\n");
 
     eval {
-        $obj = Dir::Manifest->new(
-            {
-                manifest_fn => "$fh",
-                dir         => "$d",
-            }
-        );
-
+        $obj  = $create_obj->();
         @keys = @{ $obj->get_keys };
     };
 
@@ -68,13 +65,7 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
     $fh->spew_utf8("trail_dots...\n");
 
     eval {
-        $obj = Dir::Manifest->new(
-            {
-                manifest_fn => "$fh",
-                dir         => "$d",
-            }
-        );
-
+        $obj  = $create_obj->();
         @keys = @{ $obj->get_keys };
     };
 
@@ -89,16 +80,9 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
     my $key;
 
     eval {
-        $obj = Dir::Manifest->new(
-            {
-                manifest_fn => "$fh",
-                dir         => "$d",
-            }
-        );
-
+        $obj  = $create_obj->();
         @keys = @{ $obj->get_keys };
-
-        $key = $obj->get_obj("not_exist");
+        $key  = $obj->get_obj("not_exist");
     };
 
     # TEST
@@ -113,16 +97,9 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
 
     $fh->spew_utf8("one\ntwo\nthree\n");
     $d->child("one")->spew_utf8("sample text");
-    $obj = Dir::Manifest->new(
-        {
-            manifest_fn => "$fh",
-            dir         => "$d",
-        }
-    );
-
+    $obj  = $create_obj->();
     @keys = @{ $obj->get_keys };
-
-    $key = $obj->get_obj("one");
+    $key  = $obj->get_obj("one");
 
     # TEST
     is_deeply( $key->fh->slurp_utf8, "sample text", "slurp worked.", );
@@ -134,15 +111,6 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
     $d->child("key1")->spew_utf8("this is key1");
     $d->child("key2.txt")->spew_utf8("this is key2");
     $d->child("key3.md")->spew_utf8("this is key3");
-
-    my $create_obj = sub {
-        return Dir::Manifest->new(
-            {
-                manifest_fn => "$fh",
-                dir         => "$d",
-            }
-        );
-    };
 
     $obj = $create_obj->();
 
