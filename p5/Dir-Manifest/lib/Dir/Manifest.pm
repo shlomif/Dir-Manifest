@@ -128,6 +128,25 @@ sub add_key
     return;
 }
 
+sub remove_key
+{
+    my ( $self, $args ) = @_;
+
+    my $key = $args->{key};
+
+    if ( not exists $self->_keys->{$key} )
+    {
+        die "Key \"$key\" does not exist in the dictionary!";
+    }
+
+    $self->fh($key)->remove;
+    delete $self->_keys->{$key};
+
+    path( $self->manifest_fn )->spew_raw( map { "$_\n" } @{ $self->get_keys } );
+
+    return;
+}
+
 1;
 
 __END__
@@ -202,6 +221,11 @@ as values. C<'slurp_opts'> is passed to text().
 =head2 $obj->add_key( {key => "new_key", utf8_val => $utf8_text, } );
 
 Adds a new key with a file with the new UTF-8 contents encoded as $utf8_text .
+(Added in version 0.4.0).
+
+=head2 $obj->remove_key( {key => "existing_key_id", } );
+
+Removes the key from the dictionary while deleting its associated file.
 (Added in version 0.4.0).
 
 =head1 DEDICATION

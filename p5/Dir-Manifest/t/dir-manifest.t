@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 13;
 use Dir::Manifest ();
 
 use Socket qw(:crlf);
@@ -126,12 +126,17 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
     $d->child("key1")->spew_utf8("this is key1");
     $d->child("key2.txt")->spew_utf8("this is key2");
     $d->child("key3.md")->spew_utf8("this is key3");
-    $obj = Dir::Manifest->new(
-        {
-            manifest_fn => "$fh",
-            dir         => "$d",
-        }
-    );
+
+    my $create_obj = sub {
+        return Dir::Manifest->new(
+            {
+                manifest_fn => "$fh",
+                dir         => "$d",
+            }
+        );
+    };
+
+    $obj = $create_obj->();
 
     # TEST
     is_deeply(
@@ -169,4 +174,37 @@ use Path::Tiny qw/ path tempdir tempfile cwd /;
         "added_key value[]",
         "add_key() has added the key - file system.",
     );
+
+    $obj->remove_key( { key => "key1" } );
+
+    # TEST
+    is_deeply(
+        $obj->texts_dictionary( { slurp_opts => {}, } ),
+        +{
+            "added_key" => "added_key value[]",
+            "key2.txt"  => "this is key2",
+            "key3.md"   => "this is key3"
+        },
+        "remove_key() has removed the key - texts_dictionary().",
+    );
+
+    # TEST
+    ok(
+        scalar( !-e $d->child("key1") ),
+        "remove_key() has removed the key - file not exists.",
+    );
+    {
+        my $new_obj = $create_obj->();
+
+        # TEST
+        is_deeply(
+            $new_obj->texts_dictionary( { slurp_opts => {}, } ),
+            +{
+                "added_key" => "added_key value[]",
+                "key2.txt"  => "this is key2",
+                "key3.md"   => "this is key3"
+            },
+            "remove_key() has removed the key - in a new obj from the FS.",
+        );
+    }
 }
