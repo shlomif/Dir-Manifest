@@ -16,6 +16,27 @@ has 'dir'         => ( is => 'ro', required => 1 );
 
 my $ALLOWED = qr/[a-zA-Z0-9_\-\.=]/;
 my $ALPHAN  = qr/[a-zA-Z0-9_]/;
+
+sub _is_valid_key
+{
+    my ( $self, $key ) = @_;
+    if ( $key !~ /\A(?:$ALLOWED)+\z/ )
+    {
+        die
+"Invalid characters in key \"$key\"! We only allow A-Z, a-z, 0-9, _, dashes and equal signs.";
+    }
+    if ( $key !~ /\A$ALPHAN/ )
+    {
+        die qq#Key does not start with an alphanumeric - "$key"!#;
+    }
+    if ( $key !~ /$ALPHAN\z/ )
+    {
+        die qq#Key does not end with an alphanumeric - "$key"!#;
+    }
+
+    return;
+}
+
 has '_keys' => (
     is      => 'ro',
     lazy    => 1,
@@ -27,19 +48,7 @@ has '_keys' => (
 
         foreach my $l (@lines)
         {
-            if ( $l !~ /\A(?:$ALLOWED)+\z/ )
-            {
-                die
-"Invalid characters in key \"$l\"! We only allow A-Z, a-z, 0-9, _, dashes and equal signs.";
-            }
-            if ( $l !~ /\A$ALPHAN/ )
-            {
-                die qq#Key does not start with an alphanumeric - "$l"!#;
-            }
-            if ( $l !~ /$ALPHAN\z/ )
-            {
-                die qq#Key does not end with an alphanumeric - "$l"!#;
-            }
+            $self->_is_valid_key($l);
             $ret->{$l} = 1;
         }
         return $ret;
@@ -97,7 +106,31 @@ sub texts_dictionary
     return +{ map { $_ => $self->text( $_, $opts ) } @{ $self->get_keys } };
 }
 
+sub add_key
+{
+    my ( $self, $args ) = @_;
+
+    my $key      = $args->{key};
+    my $utf8_val = $args->{utf8_val};
+
+    if ( exists $self->_keys->{$key} )
+    {
+        die "Key \"$key\" already exists in the dictionary!";
+    }
+
+    $self->_is_valid_key($key);
+
+    $self->_keys->{$key} = 1;
+
+    path( $self->manifest_fn )->spew_raw( map { "$_\n" } @{ $self->get_keys } );
+    $self->fh($key)->spew_utf8($utf8_val);
+
+    return;
+}
+
 1;
+
+__END__
 
 =head1 NAME
 
@@ -165,6 +198,11 @@ Slurps the key using L<Dir::Manifest::Slurp>
 
 Returns a hash reference (a dictionary) containing all keys and their slurped contents
 as values. C<'slurp_opts'> is passed to text().
+
+=head2 $obj->add_key( {key => "new_key", utf8_val => $utf8_text, } );
+
+Adds a new key with a file with the new UTF-8 contents encoded as $utf8_text .
+(Added in version 0.4.0).
 
 =head1 DEDICATION
 
